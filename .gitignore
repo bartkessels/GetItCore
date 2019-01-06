@@ -1,0 +1,8 @@
+*.cmake
+*Cache*
+Make*
+*.user
+
+*_autogen/
+CMakeFiles/
+
