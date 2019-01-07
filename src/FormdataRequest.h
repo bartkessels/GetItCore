@@ -7,8 +7,6 @@
 #include <QHttpPart>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include <QUrl>
-#include <QUrlQuery>
 
 #include "ICookie.h"
 #include "IFormdata.h"
