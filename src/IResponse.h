@@ -12,7 +12,7 @@ namespace GetItCore
     public:
         virtual ~IResponse(){}
 
-        virtual QList<IHeader> getHeaders() = 0;
+        virtual QList<IHeader*> getHeaders() = 0;
         virtual QString getBody() = 0;
     };
 }

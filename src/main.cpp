@@ -10,7 +10,7 @@
 
 using namespace GetItCore;
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     // Create some formdata elements
     QList<IFormdata*> formdata;
@@ -27,10 +27,9 @@ int main(int argc, char *argv[])
 
     // Create the actual request
     IRequest *request = new FormdataRequest(formdata);
-    request->addHeaders(headers);
+    request->setHeaders(headers);
 
     request->send("POST", "http://localhost:5000/post.php");
-
 
     QCoreApplication a(argc, argv);
     return a.exec();

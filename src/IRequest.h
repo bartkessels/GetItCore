@@ -15,8 +15,8 @@ namespace GetItCore
     public:
         virtual ~IRequest(){}
 
-        virtual void addCookies(QList<ICookie*> cookies) = 0;
-        virtual void addHeaders(QList<IHeader*> headers) = 0;
+        virtual void setCookies(QList<ICookie*> cookies) = 0;
+        virtual void setHeaders(QList<IHeader*> headers) = 0;
         virtual void send(QString httpMethod, QString uri) = 0;
         virtual void registerListener(IRequestListener* listener) = 0;
         virtual void deregisterListener(IRequestListener* listener) = 0;

@@ -3,6 +3,8 @@
 #include <QList>
 #include <QObject>
 #include <QString>
+#include <QHttpMultiPart>
+#include <QHttpPart>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QUrl>
@@ -11,8 +13,12 @@
 #include "ICookie.h"
 #include "IFormdata.h"
 #include "IHeader.h"
+#include "IResponse.h"
 #include "IRequest.h"
 #include "IRequestListener.h"
+#include "Response.h"
+
+#include <QtDebug>
 
 namespace GetItCore
 {
@@ -26,20 +32,27 @@ namespace GetItCore
         ~FormdataRequest();
 
         void send(QString httpMethod, QString uri);
-        void addCookies(QList<ICookie*> cookies);
-        void addHeaders(QList<IHeader*> headers);
+        void setCookies(QList<ICookie*> cookies);
+        void setHeaders(QList<IHeader*> headers);
 
         void registerListener(IRequestListener* listener);
         void deregisterListener(IRequestListener* listener);
 
     private:
-        void setHeaders(QNetworkRequest* request);
-        void setFormdata(QUrlQuery* parameters);
+        void addHeadersToRequest(QNetworkRequest request);
+        void addFormdataToMultiPart(QHttpMultiPart* multiPart);
+
+        void notifyListenersError();
+        void notifyListenersTimedOut();
+        void notifyListenersSuccess(IResponse* response);
 
         QList<IRequestListener*> listeners;
         QList<ICookie*> cookies;
         QList<IHeader*> headers;
         QList<IFormdata*> formdata;
+
+        IResponse* response;
+        QNetworkAccessManager* manager;
 
     private slots:
         void requestSent(QNetworkReply* reply);
