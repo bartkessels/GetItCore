@@ -2,8 +2,10 @@
 *Cache*
 Make*
 *.user
+*.pc
 GetItCore
 
+build/
 *_autogen/
 CMakeFiles/
 

@@ -1,8 +1,8 @@
-#include "Header.h"
+#include "Header.hpp"
 
 namespace GetItCore
 {
-    Header::Header(QString name, QString value):
+    Header::Header(std::string name, std::string value):
         name(name),
         value(value)
     {
@@ -12,12 +12,12 @@ namespace GetItCore
     {
     }
 
-    QString Header::getName()
+    std::string Header::getName()
     {
         return this->name;
     }
 
-    QString Header::getValue()
+    std::string Header::getValue()
     {
         return this->value;
     }
