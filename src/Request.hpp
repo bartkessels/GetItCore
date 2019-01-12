@@ -13,26 +13,35 @@ namespace GetItCore
     class Request
     {
     public:
+        Request();
         virtual ~Request() {}
 
         void addCookie(Cookie* cookie);
         void addHeader(Header* header);
 
-        void removeCookie(Cookie* cookie);
-        void removeHeader(Header* header);
-
         void registerListener(ResponseListener* listener);
         void deregisterListener(ResponseListener* listener);
 
-        virtual void send(std::string method, std::string uri) = 0;
+        void send(std::string method, std::string uri);
 
     protected:
         void notifyListenersRequestSent(std::list<Header*> headers, std::string body);
-        void setCURLHeader(CURL *curl, Header* header);
-        void setCURLCookie(CURL *curl, Cookie* cookie);
 
-        std::list<Cookie*> cookies;
-        std::list<Header*> headers;
+        virtual std::string getBody() = 0;
+
+        void addHeadersToCURL();
+        void addCookiesToCURL();
+
+        void setUpCURL(std::string method, std::string uri);
+        std::list<Header*> readHeadersFromCURL();
+        std::list<Cookie*> readCookiesFromCURL();
+
+
+        FILE *responseHeaders, *responseBody;
+        std::string cookies;
+        CURL *curl;
+        struct curl_slist *headers;
+
         std::list<ResponseListener*> listeners;
     };
 }

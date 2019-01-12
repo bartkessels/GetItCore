@@ -23,6 +23,7 @@ set(PUBLIC_HEADERS
 )
 
 set(SOURCES
+    src/Cookie.cpp
     src/GetItCore.cpp
     src/Header.cpp
     src/Request.cpp

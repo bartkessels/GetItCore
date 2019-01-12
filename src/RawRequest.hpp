@@ -16,12 +16,10 @@ namespace GetItCore
         void setBody(std::string body);
         void send(std::string method, std::string uri);
 
-    private:
-        CURL *buildCURLRequest(std::string method, std::string uri);
-        void addHeadersToCURL(CURL *curl);
-        void addCookiesToCURL(CURL *curl);
-        void addFormdataToCURL(CURL *curl);
+    protected:
+        std::string getBody();
 
+    private:
         std::string body;
     };
 }
