@@ -25,19 +25,17 @@ namespace GetItCore
         void send(std::string method, std::string uri);
 
     protected:
-        void notifyListenersRequestSent(std::list<Header*> headers, std::string body);
-
         virtual std::string getBody() = 0;
 
-        void addHeadersToCURL();
-        void addCookiesToCURL();
-
+    private:
+        void notifyListenersRequestSent();
         void setUpCURL(std::string method, std::string uri);
-        std::list<Header*> readHeadersFromCURL();
-        std::list<Cookie*> readCookiesFromCURL();
+        void sendCURL();
+        void cleanupCURL();
 
+        std::string responseHeaders;
+        std::string responseBody;
 
-        FILE *responseHeaders, *responseBody;
         std::string cookies;
         CURL *curl;
         struct curl_slist *headers;

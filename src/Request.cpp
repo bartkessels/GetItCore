@@ -5,7 +5,7 @@ namespace GetItCore
     Request::Request()
     {
         this->headers       = nullptr;
-        this->curl          = curl_easy_init();
+        this->curl          = nullptr;
     }
 
     size_t curlWriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -54,8 +54,10 @@ namespace GetItCore
         this->listeners.remove(listener);
     }
 
-    void Request::notifyListenersRequestSent(std::list<Header*> headers, std::string body)
+    void Request::notifyListenersRequestSent()
     {
+        std::string body;
+        std::list<Header*> headers;
         for (ResponseListener* listener : this->listeners) {
             listener->requestSent(headers, body);
         }
@@ -64,14 +66,9 @@ namespace GetItCore
     void Request::send(std::string method, std::string uri)
     {
         this->setUpCURL(method, uri);
-        std::string body = this->getBody();
-
-        curl_easy_setopt(this->curl, CURLOPT_FILE, body.c_str());
-
-        curl_easy_perform(curl);
-
-        curl_easy_cleanup(curl);
-        curl_global_cleanup();
+        this->sendCURL();
+        this->cleanupCURL();
+        this->notifyListenersRequestSent();
     }
 
     void Request::setUpCURL(std::string method, std::string uri)
@@ -82,20 +79,30 @@ namespace GetItCore
             throw "Unable to setup cURL";
         }
 
-        this->responseHeaders   = fopen("head.out", "wb");
-        this->responseBody      = fopen("body.out", "wb");
-
-        if (!this->responseHeaders) {
-            throw "Unable to open response headers file";
-        } else if (!this->responseBody) {
-            throw "Unable to open response body file";
-        }
-
         curl_easy_setopt(this->curl, CURLOPT_CUSTOMREQUEST  , method.c_str());
         curl_easy_setopt(this->curl, CURLOPT_URL            , uri.c_str());
         curl_easy_setopt(this->curl, CURLOPT_WRITEFUNCTION  , curlWriteCallback);
         curl_easy_setopt(this->curl, CURLOPT_HTTPHEADER     , this->headers);
-        curl_easy_setopt(this->curl, CURLOPT_HEADERDATA     , this->responseHeaders);
-        curl_easy_setopt(this->curl, CURLOPT_WRITEDATA      , this->responseBody);
+        curl_easy_setopt(this->curl, CURLOPT_HEADERDATA     , &this->responseHeaders);
+        curl_easy_setopt(this->curl, CURLOPT_WRITEDATA      , &this->responseBody);
+    }
+
+    void Request::sendCURL()
+    {
+        std::string body    = this->getBody();
+        int bodySize        = static_cast<int>(body.size());
+
+        curl_easy_setopt(this->curl, CURLOPT_POSTFIELDS     , body.c_str());
+        curl_easy_setopt(this->curl, CURLOPT_POSTFIELDSIZE  , bodySize);
+
+        curl_easy_perform(curl);
+    }
+
+    void Request::cleanupCURL()
+    {
+        curl_easy_cleanup(curl);
+        curl_global_cleanup();
+
+        this->curl = nullptr;
     }
 }

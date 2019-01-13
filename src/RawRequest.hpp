@@ -14,7 +14,6 @@ namespace GetItCore
         ~RawRequest();
 
         void setBody(std::string body);
-        void send(std::string method, std::string uri);
 
     protected:
         std::string getBody();
