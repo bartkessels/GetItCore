@@ -7,6 +7,7 @@ project(GetItCore
 
 set(HEADERS
     src/Cookie.hpp
+    src/FormdataRequest.hpp
     src/Header.hpp
     src/Request.hpp
     src/RawRequest.hpp
@@ -15,6 +16,7 @@ set(HEADERS
 
 set(PUBLIC_HEADERS
     include/Cookie
+    include/FormdataRequest
     include/Header
     include/Request
     include/RawRequest
@@ -24,6 +26,7 @@ set(PUBLIC_HEADERS
 
 set(SOURCES
     src/Cookie.cpp
+    src/FormdataRequest.cpp
     src/GetItCore.cpp
     src/Header.cpp
     src/Request.cpp

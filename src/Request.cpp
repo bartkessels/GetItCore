@@ -8,6 +8,11 @@ namespace GetItCore
         this->curl          = nullptr;
     }
 
+    Request::~Request()
+    {
+
+    }
+
     size_t curlWriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
     {
         size_t newSize = size * nmemb;
